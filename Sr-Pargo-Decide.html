@@ -1,0 +1,73 @@
+<a href="data:text/html;charset=utf-8,<!DOCTYPE html>
+<html lang='es'>
+<head>
+<meta charset='UTF-8'>
+<title>Sr. Pargo — ¿Qué como hoy?</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght%3D500;700;800%26family=Poppins:wght%3D400;500;600%26display%3Dswap');
+:root{--bg:%23101410;--bg2:%23171c17;--gold:%23f0a93a;--gold-deep:%23d98a1f;--teal:%233f8f96;--cream:%23f5ede0;--line:%232a2f28;--radius:18px;}
+*{box-sizing:border-box;}html,body{margin:0;padding:0;}
+body{background:var(--bg);color:var(--cream);font-family:'Poppins',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 14px;}
+.app{width:100%;max-width:420px;background:var(--bg2);border-radius:24px;border:1px solid var(--line);overflow:hidden;position:relative;box-shadow:0 30px 60px rgba(0,0,0,0.45);}
+.wave{position:absolute;bottom:0;left:0;right:0;height:26px;background:repeating-radial-gradient(circle at 10px -4px,transparent 0,transparent 8px,var(--teal) 9px,var(--teal) 10px,transparent 11px);opacity:0.35;pointer-events:none;}
+header{padding:22px 22px 16px;text-align:center;position:relative;border-bottom:1px solid var(--line);}
+.logo-container{width:90px;height:90px;margin:0 auto 10px;border-radius:50%;border:2px solid var(--gold);overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;background:%23000;}
+.logo-container img{width:100%;height:100%;object-fit:cover;}
+h1{font-family:'Baloo 2',sans-serif;font-size:24px;color:var(--gold);margin:0 0 2px;letter-spacing:0.3px;}
+.sub{font-size:13px;color:%23b9c2b6;margin:0;}
+.progress{display:flex;gap:6px;justify-content:center;padding:14px 22px 0;}
+.dot{width:22px;height:5px;border-radius:3px;background:var(--line);transition:background .25s;}
+.dot.on{background:var(--gold);}
+.screen{padding:22px;min-height:260px;display:flex;flex-direction:column;justify-content:center;animation:fade .35s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.hidden{display:none;}
+.q-title{font-family:'Baloo 2',sans-serif;font-size:19px;color:var(--cream);margin:0 0 16px;text-align:center;}
+.options{display:flex;flex-direction:column;gap:10px;}
+button.opt{font-family:'Poppins',sans-serif;font-size:15px;font-weight:500;color:var(--cream);background:%231e241d;border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .15s,background .15s,transform .1s;}
+button.opt:hover{border-color:var(--gold);background:%23232a20;}
+button.opt:active{transform:scale(0.98);}
+button.opt .emo{font-size:20px;}
+.btn-primary{font-family:'Baloo 2',sans-serif;font-size:17px;color:%2314170f;background:linear-gradient(180deg,var(--gold),var(--gold-deep));border:none;border-radius:14px;padding:14px;cursor:pointer;width:100%;letter-spacing:0.3px;}
+.btn-primary:active{transform:scale(0.98);}
+.btn-ghost{font-family:'Poppins',sans-serif;font-size:13px;color:var(--gold);background:transparent;border:none;cursor:pointer;margin-top:10px;}
+.intro{text-align:center;}
+.intro p{font-size:14px;color:%23b9c2b6;margin:0 0 20px;}
+.card{background:%231a2118;border:1.5px solid var(--gold-deep);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden;}
+.tag{display:inline-block;font-size:11px;font-weight:600;color:%2314170f;background:var(--gold);padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.dish{font-family:'Baloo 2',sans-serif;font-size:22px;color:var(--cream);margin:0 0 4px;}
+.price{font-size:18px;color:var(--gold);font-weight:600;margin:0 0 10px;}
+.why{font-size:13.5px;color:%23c7cec2;margin:0 0 14px;line-height:1.4;}
+.extras{border-top:1px dashed var(--line);padding-top:12px;display:flex;flex-direction:column;gap:6px;}
+.extra-row{display:flex;justify-content:space-between;font-size:13px;color:%23b9c2b6;}
+.extra-row b{color:var(--cream);font-weight:500;}
+footer{text-align:center;padding:14px 22px 20px;font-size:11px;color:%235f6a5c;}
+</style>
+</head>
+<body>
+<div class='app'>
+<div class='wave'></div>
+<header>
+<div class='logo-container'><img src='logo.jpg' alt='Sr. Pargo Logo'></div>
+<h1>Sr. Pargo</h1>
+<p class='sub'>Te ayudo a elegir en 2 preguntas</p>
+</header>
+<div class='progress' id='progress'><div class='dot' data-s='1'></div><div class='dot' data-s='2'></div><div class='dot' data-s='3'></div></div>
+<div class='screen' id='s0'><div class='intro'><p>¿No sabés qué pedir? Contestá rápido y te digo qué comer hoy.</p><button class='btn-primary' onclick='goTo(1)'>Empezar 🌴</button></div></div>
+<div class='screen hidden' id='s1'><p class='q-title'>¿Cuánta hambre tenés?</p><div class='options'><button class='opt' onclick='answer(&quot;hambre&quot;,&quot;mucha&quot;)'><span class='emo'>🍽️</span> Mucha, quiero plato fuerte</button><button class='opt' onclick='answer(&quot;hambre&quot;,&quot;media&quot;)'><span class='emo'>🍔</span> Normal, algo completo</button><button class='opt' onclick='answer(&quot;hambre&quot;,&quot;poca&quot;)'><span class='emo'>🍟</span> Poca, solo quiero picar</button></div></div>
+<div class='screen hidden' id='s2'><p class='q-title'>¿Antojo de mar o de tierra?</p><div class='options'><button class='opt' onclick='answer(&quot;tipo&quot;,&quot;mar&quot;)'><span class='emo'>🌊</span> Del mar (pescado)</button><button class='opt' onclick='answer(&quot;tipo&quot;,&quot;tierra&quot;)'><span class='emo'>🥩</span> De tierra (carne)</button><button class='opt' onclick='answer(&quot;tipo&quot;,&quot;cualquiera&quot;)'><span class='emo'>🤷</span> Lo que me recomendés</button></div></div>
+<div class='screen hidden' id='s3'><div class='card' id='resultCard'></div><button class='btn-primary' style='margin-top:12px;background:linear-gradient(180deg,%233fb96a,%232c8f4d);' id='waBtn' onclick='pedirPorWhatsApp()'>📲 Pedir por WhatsApp</button><button class='btn-ghost' onclick='restart()'>↺ Volver a preguntar</button></div>
+<footer>Sr. Pargo To-Go · Brasil de Santa Ana, CR</footer>
+</div>
+<script>
+const state={};
+function goTo(step){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));document.getElementById('s'+step).classList.remove('hidden');document.querySelectorAll('.dot').forEach(d=>{d.classList.toggle('on',parseInt(d.dataset.s)<=step);});}
+function answer(key,value){state[key]=value;if(key==='hambre')goTo(2);if(key==='tipo')showResult();}
+function restart(){Object.keys(state).forEach(k=>delete state[k]);goTo(0);document.querySelectorAll('.dot').forEach(d=>d.classList.remove('on'));}
+const WHATSAPP_NUMBER='50663669177';
+const DEFAULT_DATA={'mucha_mar':{tag:'Plato fuerte',dish:'Rice %26 Beans con Pargo',price:'₡11.900',why:'Arroz con coco, frijoles y pargo entero. El plato insignia de la casa.',extras:[['Bebida','Agua en botella'],['Antojo extra','Brownie ₡1.500']]},'mucha_tierra':{tag:'Plato fuerte',dish:'Rice %26 Beans con Costilla',price:'₡11.900',why:'Costilla bien caribeña sobre arroz con coco. Llena de verdad.',extras:[['Bebida','Gaseosa'],['Antojo extra','Brownie ₡1.500']]},'mucha_cualquiera':{tag:'Recomendado de la casa',dish:'Rice %26 Beans con Pargo',price:'₡11.900',why:'Si no decidís, este es el más pedido. No falla.',extras:[['Alternativa','Rice %26 Beans con Costilla ₡11.900'],['Antojo extra','Brownie ₡1.500']]},'media_mar':{tag:'Combo caribeño',dish:'Combo Sándwich de Pescado',price:'₡5.900',why:'Incluye papas y refresco. Ligero pero completo, con sabor a mar.',extras:[['Alternativa','Combo Hamburguesa de Salmón ₡5.900'],['Antojo extra','Brownie ₡1.500']]},'media_tierra':{tag:'Combo caribeño',dish:'Combo Hamburguesa Caribeña',price:'₡5.900',why:'Papas y refresco incluidos. El combo clásico de tierra.',extras:[['Antojo extra','Brownie ₡1.500']]},'media_cualquiera':{tag:'Combo caribeño',dish:'Combo Hamburguesa de Salmón',price:'₡5.900',why:'Un punto medio entre mar y tierra. Incluye papas y refresco.',extras:[['Alternativa','Combo Hamburguesa Caribeña ₡5.900'],['Antojo extra','Brownie ₡1.500']]},'poca_mar':{tag:'Para picar',dish:'Ceviche Grande',price:'₡4.500',why:'Fresco y liviano. Justo para un antojo de mar sin llenar mucho.',extras:[['Para acompañar','Patacones Caribeños ₡4.500'],['Bebida','Agua de Sapo']]},'poca_tierra':{tag:'Para picar',dish:'Papas Caribeñas',price:'₡3.000',why:'Papas con ese toque caribeño de la casa. Rápido y rico.',extras:[['Para acompañar','Patacones ₡3.000'],['Bebida','Gaseosa']]},'poca_cualquiera':{tag:'Para picar',dish:'Ceviche Pequeño',price:'₡2.000',why:'Poquito, fresco y sin compromiso. Ideal para solo picar algo.',extras:[['Para acompañar','Papas pequeña ₡2.000'],['Bebida','Agua en botella']]}};
+let DATA=JSON.parse(JSON.stringify(DEFAULT_DATA));
+function showResult(){const key=state.hambre+'_'+state.tipo;const r=DATA[key];state.lastKey=key;const card=document.getElementById('resultCard');card.innerHTML=`<span class="tag">${r.tag}</span><p class="dish">${r.dish}</p><p class="price">${r.price}</p><p class="why">${r.why}</p><div class="extras">${r.extras.map(e=>\`<div class="extra-row"><span>\${e[0]}</span><b>\${e[1]}</b></div>\`).join('')}</div>`;goTo(3);}
+function pedirPorWhatsApp(){const r=DATA[state.lastKey];const msg=\`¡Hola! Quiero pedir: \${r.dish} (\${r.price}). ¿Me confirmás disponibilidad?\`;const url=\`https://wa.me/\${WHATSAPP_NUMBER}?text=\${encodeURIComponent(msg)}\`;window.open(url,'_blank');}
+</script>
+</body>
+</html>" download="index.html" style="display: inline-block; padding: 12px 24px; background-color: #f0a93a; color: #101410; font-family: 'Poppins', sans-serif; font-weight: bold; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">📥 Descargar archivo index.html</a>
