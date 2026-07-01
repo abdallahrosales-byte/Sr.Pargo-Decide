@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sr. Pargo — ¿Qué como hoy?</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Poppins:wght@400;500;600&display=swap');
+
+:root{
+  --bg: #101410;
+  --bg2: #171c17;
+  --gold: #f0a93a;
+  --gold-deep: #d98a1f;
+  --teal: #3f8f96;
+  --cream: #f5ede0;
+  --line: #2a2f28;
+  --radius: 18px;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'Poppins', sans-serif;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 24px 14px;
+}
+
+.app{
+  width:100%;
+  max-width:420px;
+  background: var(--bg2);
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  overflow:hidden;
+  position:relative;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+}
+
+/* decorative waves */
+.wave{
+  position:absolute;
+  bottom:0; left:0; right:0;
+  height:26px;
+  background: repeating-radial-gradient(circle at 10px -4px, transparent 0, transparent 8px, var(--teal) 9px, var(--teal) 10px, transparent 11px);
+  opacity:0.35;
+  pointer-events:none;
+}
+
+header{
+  padding: 22px 22px 16px;
+  text-align:center;
+  position:relative;
+  border-bottom: 1px solid var(--line);
+}
+.gear{
+  position:absolute;
+  top:14px; right:14px;
+  background:transparent;
+  border:none;
+  font-size:18px;
+  cursor:pointer;
+  opacity:0.6;
+  padding:4px;
+}
+.gear:hover{ opacity:1; }
+
+.editor{
+  max-height: 420px;
+  overflow-y:auto;
+  padding-right:4px;
+}
+.editor-item{
+  background:#1a2118;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+  margin-bottom:8px;
+}
+.editor-item label{
+  display:block;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  color:#8a938a;
+  margin: 6px 0 2px;
+}
+.editor-item label:first-child{ margin-top:0; }
+.editor-item input, .editor-item textarea{
+  width:100%;
+  background:#101410;
+  border:1px solid var(--line);
+  border-radius:8px;
+  color: var(--cream);
+  font-family:'Poppins', sans-serif;
+  font-size:13px;
+  padding:7px 9px;
+}
+.editor-item textarea{ resize:vertical; min-height:36px; }
+.editor-cat{
+  font-family:'Baloo 2', sans-serif;
+  color: var(--gold);
+  font-size:13px;
+  margin: 14px 0 6px;
+}
+.save-msg{
+  text-align:center;
+  font-size:12px;
+  color: var(--gold);
+  height:16px;
+  margin-top:4px;
+}
+.mascot{
+  font-size:40px;
+  line-height:1;
+  margin-bottom:6px;
+}
+h1{
+  font-family:'Baloo 2', sans-serif;
+  font-size: 24px;
+  color: var(--gold);
+  margin: 0 0 2px;
+  letter-spacing:0.3px;
+}
+.sub{
+  font-size:13px;
+  color: #b9c2b6;
+  margin:0;
+}
+
+.progress{
+  display:flex;
+  gap:6px;
+  justify-content:center;
+  padding: 14px 22px 0;
+}
+.dot{
+  width:22px; height:5px;
+  border-radius:3px;
+  background: var(--line);
+  transition: background .25s;
+}
+.dot.on{ background: var(--gold); }
+
+.screen{
+  padding: 22px;
+  min-height: 260px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  animation: fade .35s ease;
+}
+@keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+.hidden{ display:none; }
+
+.q-title{
+  font-family:'Baloo 2', sans-serif;
+  font-size: 19px;
+  color: var(--cream);
+  margin: 0 0 16px;
+  text-align:center;
+}
+
+.options{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+button.opt{
+  font-family:'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight:500;
+  color: var(--cream);
+  background: #1e241d;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  text-align:left;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transition: border-color .15s, background .15s, transform .1s;
+}
+button.opt:hover{ border-color: var(--gold); background:#232a20; }
+button.opt:active{ transform: scale(0.98); }
+button.opt .emo{ font-size:20px; }
+
+.btn-primary{
+  font-family:'Baloo 2', sans-serif;
+  font-size: 17px;
+  color: #14170f;
+  background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+  border:none;
+  border-radius: 14px;
+  padding: 14px;
+  cursor:pointer;
+  width:100%;
+  letter-spacing:0.3px;
+}
+.btn-primary:active{ transform: scale(0.98); }
+
+.btn-ghost{
+  font-family:'Poppins', sans-serif;
+  font-size: 13px;
+  color: var(--gold);
+  background:transparent;
+  border: none;
+  cursor:pointer;
+  margin-top: 10px;
+}
+
+.intro{ text-align:center; }
+.intro p{ font-size:14px; color:#b9c2b6; margin: 0 0 20px; }
+
+/* result card */
+.card{
+  background:#1a2118;
+  border:1.5px solid var(--gold-deep);
+  border-radius: var(--radius);
+  padding: 18px;
+  position:relative;
+  overflow:hidden;
+}
+.tag{
+  display:inline-block;
+  font-size:11px;
+  font-weight:600;
+  color:#14170f;
+  background: var(--gold);
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+.dish{
+  font-family:'Baloo 2', sans-serif;
+  font-size: 22px;
+  color: var(--cream);
+  margin: 0 0 4px;
+}
+.price{
+  font-size: 18px;
+  color: var(--gold);
+  font-weight:600;
+  margin: 0 0 10px;
+}
+.why{
+  font-size: 13.5px;
+  color:#c7cec2;
+  margin: 0 0 14px;
+  line-height:1.4;
+}
+.extras{
+  border-top: 1px dashed var(--line);
+  padding-top: 12px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.extra-row{
+  display:flex;
+  justify-content:space-between;
+  font-size: 13px;
+  color:#b9c2b6;
+}
+.extra-row b{ color: var(--cream); font-weight:500; }
+
+footer{
+  text-align:center;
+  padding: 14px 22px 20px;
+  font-size: 11px;
+  color: #5f6a5c;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="wave"></div>
+  <header>
+    <button class="gear" onclick="openEditor()" title="Editar menú">⚙️</button>
+    <div class="mascot">🐟🧢</div>
+    <h1>Sr. Pargo</h1>
+    <p class="sub">Te ayudo a elegir en 2 preguntas</p>
+  </header>
+
+  <div class="progress" id="progress">
+    <div class="dot" data-s="1"></div>
+    <div class="dot" data-s="2"></div>
+    <div class="dot" data-s="3"></div>
+  </div>
+
+  <!-- Pantalla 0: intro -->
+  <div class="screen" id="s0">
+    <div class="intro">
+      <p>¿No sabés qué pedir? Contestá rápido y te digo qué comer hoy.</p>
+      <button class="btn-primary" onclick="goTo(1)">Empezar 🌴</button>
+    </div>
+  </div>
+
+  <!-- Pantalla 1: hambre -->
+  <div class="screen hidden" id="s1">
+    <p class="q-title">¿Cuánta hambre tenés?</p>
+    <div class="options">
+      <button class="opt" onclick="answer('hambre','mucha')"><span class="emo">🍽️</span> Mucha, quiero plato fuerte</button>
+      <button class="opt" onclick="answer('hambre','media')"><span class="emo">🍔</span> Normal, algo completo</button>
+      <button class="opt" onclick="answer('hambre','poca')"><span class="emo">🍟</span> Poca, solo quiero picar</button>
+    </div>
+  </div>
+
+  <!-- Pantalla 2: mar o tierra -->
+  <div class="screen hidden" id="s2">
+    <p class="q-title">¿Antojo de mar o de tierra?</p>
+    <div class="options">
+      <button class="opt" onclick="answer('tipo','mar')"><span class="emo">🌊</span> Del mar (pescado)</button>
+      <button class="opt" onclick="answer('tipo','tierra')"><span class="emo">🥩</span> De tierra (carne)</button>
+      <button class="opt" onclick="answer('tipo','cualquiera')"><span class="emo">🤷</span> Lo que me recomendés</button>
+    </div>
+  </div>
+
+  <!-- Pantalla resultado -->
+  <div class="screen hidden" id="s3">
+    <div class="card" id="resultCard"></div>
+    <button class="btn-primary" style="margin-top:12px;background:linear-gradient(180deg,#3fb96a,#2c8f4d);" id="waBtn" onclick="pedirPorWhatsapp()">📲 Pedir por WhatsApp</button>
+    <button class="btn-ghost" onclick="restart()">↺ Volver a preguntar</button>
+  </div>
+
+  <!-- Pantalla editor de menú -->
+  <div class="screen hidden" id="sEdit">
+    <p class="q-title">Editar menú</p>
+    <div class="editor" id="editorList"></div>
+    <button class="btn-primary" onclick="saveEditor()">Guardar cambios</button>
+    <div class="save-msg" id="saveMsg"></div>
+    <button class="btn-ghost" onclick="closeEditor()">← Volver</button>
+  </div>
+
+  <footer>Sr. Pargo To-Go · Brasil de Santa Ana, CR</footer>
+</div>
+
+<script>
+const state = {};
+
+function goTo(step){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('s'+step).classList.remove('hidden');
+  document.querySelectorAll('.dot').forEach(d=>{
+    d.classList.toggle('on', parseInt(d.dataset.s) <= step);
+  });
+}
+
+function answer(key, value){
+  state[key] = value;
+  if(key === 'hambre') goTo(2);
+  if(key === 'tipo') showResult();
+}
+
+function restart(){
+  Object.keys(state).forEach(k=>delete state[k]);
+  goTo(0);
+  document.querySelectorAll('.dot').forEach(d=>d.classList.remove('on'));
+}
+
+const WHATSAPP_NUMBER = '50663669177';
+
+const DEFAULT_DATA = {
+  'mucha_mar': {
+    tag:'Plato fuerte',
+    dish:'Rice & Beans con Pargo',
+    price:'₡11.900',
+    why:'Arroz con coco, frijoles y pargo entero. El plato insignia de la casa.',
+    extras:[['Bebida','Agua en botella'],['Antojo extra','Brownie ₡1.500']]
+  },
+  'mucha_tierra': {
+    tag:'Plato fuerte',
+    dish:'Rice & Beans con Costilla',
+    price:'₡11.900',
+    why:'Costilla bien caribeña sobre arroz con coco. Llena de verdad.',
+    extras:[['Bebida','Gaseosa'],['Antojo extra','Brownie ₡1.500']]
+  },
+  'mucha_cualquiera': {
+    tag:'Recomendado de la casa',
+    dish:'Rice & Beans con Pargo',
+    price:'₡11.900',
+    why:'Si no decidís, este es el más pedido. No falla.',
+    extras:[['Alternativa','Rice & Beans con Costilla ₡11.900'],['Antojo extra','Brownie ₡1.500']]
+  },
+  'media_mar': {
+    tag:'Combo caribeño',
+    dish:'Combo Sándwich de Pescado',
+    price:'₡5.900',
+    why:'Incluye papas y refresco. Ligero pero completo, con sabor a mar.',
+    extras:[['Alternativa','Combo Hamburguesa de Salmón ₡5.900'],['Antojo extra','Brownie ₡1.500']]
+  },
+  'media_tierra': {
+    tag:'Combo caribeño',
+    dish:'Combo Hamburguesa Caribeña',
+    price:'₡5.900',
+    why:'Papas y refresco incluidos. El combo clásico de tierra.',
+    extras:[['Antojo extra','Brownie ₡1.500']]
+  },
+  'media_cualquiera': {
+    tag:'Combo caribeño',
+    dish:'Combo Hamburguesa de Salmón',
+    price:'₡5.900',
+    why:'Un punto medio entre mar y tierra. Incluye papas y refresco.',
+    extras:[['Alternativa','Combo Hamburguesa Caribeña ₡5.900'],['Antojo extra','Brownie ₡1.500']]
+  },
+  'poca_mar': {
+    tag:'Para picar',
+    dish:'Ceviche Grande',
+    price:'₡4.500',
+    why:'Fresco y liviano. Justo para un antojo de mar sin llenar mucho.',
+    extras:[['Para acompañar','Patacones Caribeños ₡4.500'],['Bebida','Agua de Sapo']]
+  },
+  'poca_tierra': {
+    tag:'Para picar',
+    dish:'Papas Caribeñas',
+    price:'₡3.000',
+    why:'Papas con ese toque caribeño de la casa. Rápido y rico.',
+    extras:[['Para acompañar','Patacones ₡3.000'],['Bebida','Gaseosa']]
+  },
+  'poca_cualquiera': {
+    tag:'Para picar',
+    dish:'Ceviche Pequeño',
+    price:'₡2.000',
+    why:'Poquito, fresco y sin compromiso. Ideal para solo picar algo.',
+    extras:[['Para acompañar','Papas pequeña ₡2.000'],['Bebida','Agua en botella']]
+  }
+};
+
+function showResult(){
+  const key = state.hambre + '_' + state.tipo;
+  const r = DATA[key];
+  state.lastKey = key;
+  const card = document.getElementById('resultCard');
+  card.innerHTML = `
+    <span class="tag">${r.tag}</span>
+    <p class="dish">${r.dish}</p>
+    <p class="price">${r.price}</p>
+    <p class="why">${r.why}</p>
+    <div class="extras">
+      ${r.extras.map(e => `<div class="extra-row"><span>${e[0]}</span><b>${e[1]}</b></div>`).join('')}
+    </div>
+  `;
+  goTo(3);
+}
+
+function pedirPorWhatsapp(){
+  const r = DATA[state.lastKey];
+  const msg = `¡Hola! Quiero pedir: ${r.dish} (${r.price}). ¿Me confirmás disponibilidad?`;
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+/* ---------- Menú compartido (JSONBin.io) ---------- */
+// 1. Creá una cuenta gratis en https://jsonbin.io
+// 2. Creá un "bin" nuevo con el contenido de DEFAULT_DATA (lo tenés más abajo)
+// 3. Pegá aquí tu Bin ID y tu X-Master-Key (los encontrás en tu cuenta de JSONBin)
+const JSONBIN_ID  = '6a459f22da38895dfe1f0734';
+const JSONBIN_KEY = '$2a$10$W4/1iYQJANTmSAPtTWUpi..IzKQYHxx11URrTizaUq/uCce1gX5XO';
+const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+
+let DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
+const STORAGE_KEY = 'sr-pargo-menu-data';
+const configurado = () => JSONBIN_ID !== 'PON_AQUI_TU_BIN_ID' && JSONBIN_KEY !== 'PON_AQUI_TU_MASTER_KEY';
+
+async function loadMenu(){
+  if(configurado()){
+    try{
+      const res = await fetch(`${JSONBIN_URL}/latest`, {
+        headers: { 'X-Master-Key': JSONBIN_KEY }
+      });
+      if(res.ok){
+        const json = await res.json();
+        DATA = json.record;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); // copia de respaldo local
+        return;
+      }
+    }catch(e){ /* sin internet: seguimos con la copia local */ }
+  }
+  try{
+    const local = localStorage.getItem(STORAGE_KEY);
+    if(local){ DATA = JSON.parse(local); }
+  }catch(e){}
+}
+
+async function persistMenu(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); // siempre guarda copia local
+  if(!configurado()) return 'local';
+  try{
+    const res = await fetch(JSONBIN_URL, {
+      method:'PUT',
+      headers:{ 'Content-Type':'application/json', 'X-Master-Key': JSONBIN_KEY },
+      body: JSON.stringify(DATA)
+    });
+    return res.ok ? 'nube' : 'local';
+  }catch(e){ return 'local'; }
+}
+
+function openEditor(){
+  const list = document.getElementById('editorList');
+  list.innerHTML = Object.keys(DATA).map(key => {
+    const r = DATA[key];
+    return `
+      <div class="editor-item" data-key="${key}">
+        <div class="editor-cat">${key.replace('_',' + ')}</div>
+        <label>Etiqueta</label>
+        <input type="text" data-field="tag" value="${r.tag}">
+        <label>Plato</label>
+        <input type="text" data-field="dish" value="${r.dish}">
+        <label>Precio</label>
+        <input type="text" data-field="price" value="${r.price}">
+        <label>Descripción corta</label>
+        <textarea data-field="why">${r.why}</textarea>
+      </div>
+    `;
+  }).join('');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('sEdit').classList.remove('hidden');
+}
+
+function closeEditor(){
+  restart();
+}
+
+async function saveEditor(){
+  document.querySelectorAll('.editor-item').forEach(item => {
+    const key = item.dataset.key;
+    ['tag','dish','price','why'].forEach(field => {
+      const el = item.querySelector(`[data-field="${field}"]`);
+      DATA[key][field] = el.value;
+    });
+  });
+  const msg = document.getElementById('saveMsg');
+  msg.textContent = 'Guardando...';
+  const donde = await persistMenu();
+  msg.textContent = donde === 'nube'
+    ? '✓ Guardado para todos'
+    : '✓ Guardado solo en este dispositivo';
+  setTimeout(()=> msg.textContent='', 2500);
+}
+
+loadMenu();
+</script>
+
+</body>
+</html>
